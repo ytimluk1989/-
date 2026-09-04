@@ -1,34 +1,985 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ylthuanbao2016 - 我的个人网站</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Microsoft YaHei", sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            text-align: center;
-            color: white;
-            padding: 40px;
-        }
-        h1 { font-size: 2.5em; margin-bottom: 20px; }
-        p { font-size: 1.2em; line-height: 1.8; opacity: 0.9; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>叶绿体环保 | Chloroplast Environmental</title>
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0d9488;
+      --primary-light: #14b8a6;
+      --primary-dark: #0f766e;
+      --secondary: #10b981;
+      --accent: #06b6d4;
+      --dark: #134e4a;
+      --light: #f0fdfa;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --white: #ffffff;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Loading Animation */
+    .loader {
+      position: fixed; inset: 0; background: var(--light); z-index: 10000;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    .loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-logo {
+      width: 80px; height: 80px; border-radius: 50%;
+      animation: pulse 2s infinite; margin-bottom: 20px;
+    }
+    .loader-bar {
+      width: 120px; height: 3px; background: #e5e7eb; border-radius: 3px; overflow: hidden;
+    }
+    .loader-bar::after {
+      content: ''; display: block; width: 40%; height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      animation: loadingSlide 1s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    @keyframes loadingSlide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(13,148,136,0.1);
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      box-shadow: var(--shadow-lg);
+      background: rgba(255,255,255,0.98);
+    }
+    .nav-container {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between; height: 72px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
+    }
+    .nav-logo img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .nav-logo-text {
+      font-size: 1.1rem; font-weight: 700; color: var(--dark);
+      line-height: 1.2;
+    }
+    .nav-logo-text span {
+      display: block; font-size: 0.7rem; font-weight: 500; color: var(--primary); letter-spacing: 0.5px;
+    }
+    .nav-menu {
+      display: flex; align-items: center; gap: 8px; list-style: none;
+    }
+    .nav-menu a {
+      text-decoration: none; color: var(--text); font-size: 0.9rem; font-weight: 500;
+      padding: 8px 14px; border-radius: 8px; transition: all 0.2s ease;
+      position: relative;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+      color: var(--primary); background: var(--light);
+    }
+    .nav-menu a::after {
+      content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 2px; background: var(--primary); border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 60%; }
+    .lang-switch {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--light); padding: 4px 8px; border-radius: 20px;
+      border: 1px solid rgba(13,148,136,0.15);
+    }
+    .lang-switch button {
+      border: none; background: transparent; cursor: pointer; font-size: 0.8rem;
+      font-weight: 600; padding: 4px 10px; border-radius: 16px; transition: all 0.2s;
+      color: var(--text-light);
+    }
+    .lang-switch button.active {
+      background: var(--primary); color: white;
+    }
+    .mobile-toggle {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px;
+      background: none; border: none;
+    }
+    .mobile-toggle span {
+      display: block; width: 24px; height: 2px; background: var(--dark);
+      transition: all 0.3s ease; border-radius: 2px;
+    }
+    .mobile-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .mobile-toggle.open span:nth-child(2) { opacity: 0; }
+    .mobile-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Hero Section */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center;
+      overflow: hidden; padding-top: 72px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(19,78,74,0.88) 0%, rgba(13,148,136,0.75) 50%, rgba(6,182,212,0.6) 100%);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative; z-index: 2; max-width: 1280px; margin: 0 auto;
+      padding: 0 24px; width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      padding: 8px 18px; border-radius: 30px; color: white; font-size: 0.85rem;
+      margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.2);
+      animation: fadeInDown 0.8s ease;
+    }
+    .hero-badge i { color: #a7f3d0; }
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; color: white;
+      line-height: 1.15; margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+    .hero-title .highlight {
+      background: linear-gradient(90deg, #a7f3d0, #6ee7b7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-desc {
+      font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(255,255,255,0.9);
+      max-width: 600px; margin-bottom: 36px; line-height: 1.7;
+      animation: fadeInUp 0.8s ease 0.4s both;
+    }
+    .hero-buttons {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease 0.6s both;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 10px; font-size: 1rem; font-weight: 600;
+      text-decoration: none; transition: all 0.3s ease; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: white; color: var(--primary-dark);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    .btn-outline {
+      background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7);
+    }
+    .hero-stats {
+      position: relative; z-index: 2; max-width: 1280px; margin: 60px auto 0;
+      padding: 0 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      animation: fadeInUp 0.8s ease 0.8s both;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.12); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
+      padding: 24px; text-align: center; color: white;
+      transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+      background: rgba(255,255,255,0.2); transform: translateY(-4px);
+    }
+    .stat-number {
+      font-size: 2.2rem; font-weight: 800; margin-bottom: 6px;
+    }
+    .stat-label { font-size: 0.85rem; opacity: 0.85; }
+
+    /* Floating Leaves Animation */
+    .floating-leaves {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
+    }
+    .leaf {
+      position: absolute; width: 20px; height: 20px; opacity: 0.3;
+      background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+      border-radius: 0 80% 0 80%; animation: floatLeaf linear infinite;
+    }
+    .leaf:nth-child(1) { left: 10%; top: 100%; animation-duration: 12s; animation-delay: 0s; width: 16px; height: 16px; }
+    .leaf:nth-child(2) { left: 25%; top: 100%; animation-duration: 15s; animation-delay: 2s; width: 24px; height: 24px; }
+    .leaf:nth-child(3) { left: 50%; top: 100%; animation-duration: 10s; animation-delay: 1s; width: 14px; height: 14px; }
+    .leaf:nth-child(4) { left: 70%; top: 100%; animation-duration: 14s; animation-delay: 3s; width: 20px; height: 20px; }
+    .leaf:nth-child(5) { left: 85%; top: 100%; animation-duration: 11s; animation-delay: 4s; width: 18px; height: 18px; }
+    @keyframes floatLeaf {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Section Base */
+    section { padding: 100px 24px; }
+    .section-container {
+      max-width: 1280px; margin: 0 auto;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 60px;
+    }
+    .section-tag {
+      display: inline-block; padding: 6px 16px; background: var(--light);
+      color: var(--primary); font-size: 0.8rem; font-weight: 600;
+      border-radius: 20px; margin-bottom: 16px; border: 1px solid rgba(13,148,136,0.15);
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--dark);
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 1.05rem; color: var(--text-light); max-width: 600px; margin: 0 auto;
+    }
+
+    /* About Section */
+    .about-section { background: var(--white); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .about-image {
+      position: relative; border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .about-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-image::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(13,148,136,0.3));
+      pointer-events: none;
+    }
+    .about-badge {
+      position: absolute; bottom: 24px; left: 24px;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+      padding: 16px 24px; border-radius: 14px; box-shadow: var(--shadow);
+    }
+    .badge-year { font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
+    .badge-text { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
+    .about-content h3 {
+      font-size: 1.8rem; font-weight: 700; color: var(--dark); margin-bottom: 20px;
+    }
+    .about-content p {
+      color: var(--text-light); margin-bottom: 16px; font-size: 1rem; line-height: 1.8;
+    }
+    .about-mission {
+      background: linear-gradient(135deg, var(--light), #e0f2fe);
+      border-left: 4px solid var(--primary); padding: 20px 24px;
+      border-radius: 0 12px 12px 0; margin-top: 24px;
+    }
+    .about-mission strong {
+      color: var(--primary-dark); font-size: 1.1rem; display: block; margin-bottom: 6px;
+    }
+    .about-mission span { color: var(--text-light); font-size: 0.95rem; }
+
+    /* Services Section */
+    .services-section { background: linear-gradient(180deg, var(--light) 0%, var(--white) 100%); }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    }
+    .service-card {
+      background: var(--white); border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow); border: 1px solid rgba(13,148,136,0.08);
+      transition: all 0.4s ease; position: relative;
+    }
+    .service-card:hover {
+      transform: translateY(-8px); box-shadow: var(--shadow-lg);
+      border-color: rgba(13,148,136,0.2);
+    }
+    .service-image {
+      height: 200px; overflow: hidden; position: relative;
+    }
+    .service-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .service-card:hover .service-image img { transform: scale(1.08); }
+    .service-icon {
+      position: absolute; bottom: -24px; right: 24px;
+      width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+    }
+    .service-body { padding: 32px 24px 24px; }
+    .service-body h3 {
+      font-size: 1.15rem; font-weight: 700; color: var(--dark); margin-bottom: 10px;
+    }
+    .service-body p {
+      font-size: 0.9rem; color: var(--text-light); line-height: 1.7;
+    }
+    .service-tags {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+    }
+    .service-tag {
+      font-size: 0.75rem; padding: 4px 10px; background: var(--light);
+      color: var(--primary); border-radius: 6px; font-weight: 500;
+    }
+
+    /* Qualifications Section */
+    .qual-section {
+      background: linear-gradient(135deg, var(--dark) 0%, #115e59 50%, var(--primary-dark) 100%);
+      color: white; position: relative; overflow: hidden;
+    }
+    .qual-section .section-title { color: white; }
+    .qual-section .section-subtitle { color: rgba(255,255,255,0.7); }
+    .qual-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    }
+    .qual-card {
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+      padding: 32px 24px; text-align: center; transition: all 0.3s ease;
+    }
+    .qual-card:hover {
+      background: rgba(255,255,255,0.15); transform: translateY(-4px);
+    }
+    .qual-icon {
+      width: 56px; height: 56px; margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: white;
+    }
+    .qual-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .qual-card p { font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    /* Partners Section */
+    .partners-section { background: var(--white); }
+    .partners-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    }
+    .partner-card {
+      background: var(--light); border-radius: 16px; padding: 32px;
+      text-align: center; border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .partner-card:hover {
+      border-color: var(--primary-light); transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .partner-icon {
+      width: 64px; height: 64px; margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.6rem;
+    }
+    .partner-card h3 { font-size: 1.2rem; color: var(--dark); margin-bottom: 8px; }
+    .partner-card p { font-size: 0.9rem; color: var(--text-light); }
+
+    /* Coverage Section */
+    .coverage-section {
+      background: linear-gradient(180deg, var(--white) 0%, var(--light) 100%);
+      position: relative; overflow: hidden;
+    }
+    .coverage-bg {
+      position: absolute; inset: 0; opacity: 0.15; z-index: 0;
+    }
+    .coverage-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .coverage-content { position: relative; z-index: 1; }
+    .coverage-cities {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; margin-top: 40px;
+    }
+    .city-card {
+      background: var(--white); border-radius: 16px; padding: 24px 12px;
+      text-align: center; box-shadow: var(--shadow);
+      border: 1px solid rgba(13,148,136,0.1); transition: all 0.3s ease;
+    }
+    .city-card:hover {
+      transform: translateY(-6px); box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+    .city-card i {
+      font-size: 1.6rem; color: var(--primary); margin-bottom: 10px; display: block;
+    }
+    .city-card .cn { font-size: 1rem; font-weight: 700; color: var(--dark); }
+    .city-card .en { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+
+    /* Contact Section */
+    .contact-section { background: var(--dark); color: white; padding: 80px 24px 40px; }
+    .contact-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+    }
+    .contact-brand img { width: 56px; height: 56px; border-radius: 50%; margin-bottom: 16px; }
+    .contact-brand h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .contact-brand p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+    .contact-col h4 {
+      font-size: 1rem; font-weight: 600; margin-bottom: 20px;
+      color: var(--primary-light);
+    }
+    .contact-col ul { list-style: none; }
+    .contact-col li { margin-bottom: 10px; }
+    .contact-col a {
+      color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s; display: flex; align-items: center; gap: 8px;
+    }
+    .contact-col a:hover { color: var(--primary-light); }
+    .contact-col a i { width: 16px; text-align: center; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1); margin-top: 48px; padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+
+    /* Scroll animations */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .nav-menu { display: none; }
+      .mobile-toggle { display: flex; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .about-image { order: -1; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .qual-grid { grid-template-columns: repeat(2, 1fr); }
+      .partners-grid { grid-template-columns: 1fr; }
+      .coverage-cities { grid-template-columns: repeat(4, 1fr); }
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      section { padding: 60px 16px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .qual-grid { grid-template-columns: 1fr; }
+      .coverage-cities { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 40px; }
+      .stat-card { padding: 16px; }
+      .stat-number { font-size: 1.6rem; }
+      .hero-buttons { justify-content: center; }
+      .hero-content { text-align: center; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .footer-bottom { justify-content: center; text-align: center; }
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.98); backdrop-filter: blur(12px);
+      z-index: 999; padding: 24px; transform: translateX(100%);
+      transition: transform 0.3s ease; display: flex; flex-direction: column; gap: 8px;
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .mobile-menu a {
+      padding: 16px; font-size: 1.1rem; font-weight: 600; color: var(--dark);
+      text-decoration: none; border-radius: 12px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .mobile-menu a:hover { background: var(--light); color: var(--primary); }
+    .mobile-menu a i { width: 24px; text-align: center; color: var(--primary); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>欢迎来到我的网站</h1>
-        <p>这是我的个人主页，网站正在建设中...</p>
-        <p>ylthuanbao2016.eu.cc</p>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <img src="images/logo.jpg" alt="Logo" class="loader-logo">
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <img src="images/logo.jpg" alt="叶绿体环保 Logo">
+        <div class="nav-logo-text">
+          <span data-zh="叶绿体环保" data-en="Chloroplast EP">叶绿体环保</span>
+          <span data-zh="Foshan Chloroplast Environmental Protection" data-en="Foshan Chloroplast Environmental Protection">Foshan Chloroplast Environmental Protection</span>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home" data-zh="首页" data-en="Home">首页</a></li>
+        <li><a href="#about" data-zh="关于我们" data-en="About">关于我们</a></li>
+        <li><a href="#services" data-zh="核心业务" data-en="Services">核心业务</a></li>
+        <li><a href="#qualifications" data-zh="资质荣誉" data-en="Qualifications">资质荣誉</a></li>
+        <li><a href="#partners" data-zh="产学研合作" data-en="Partners">产学研合作</a></li>
+        <li><a href="#coverage" data-zh="服务区域" data-en="Coverage">服务区域</a></li>
+        <li><a href="#contact" data-zh="联系我们" data-en="Contact">联系我们</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="lang-switch">
+          <button class="active" onclick="setLang('zh')" id="btnZh">中文</button>
+          <button onclick="setLang('en')" id="btnEn">EN</button>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home" onclick="toggleMobileMenu()"><i class="fas fa-home"></i> <span data-zh="首页" data-en="Home">首页</span></a>
+    <a href="#about" onclick="toggleMobileMenu()"><i class="fas fa-building"></i> <span data-zh="关于我们" data-en="About">关于我们</span></a>
+    <a href="#services" onclick="toggleMobileMenu()"><i class="fas fa-leaf"></i> <span data-zh="核心业务" data-en="Services">核心业务</span></a>
+    <a href="#qualifications" onclick="toggleMobileMenu()"><i class="fas fa-award"></i> <span data-zh="资质荣誉" data-en="Qualifications">资质荣誉</span></a>
+    <a href="#partners" onclick="toggleMobileMenu()"><i class="fas fa-handshake"></i> <span data-zh="产学研合作" data-en="Partners">产学研合作</span></a>
+    <a href="#coverage" onclick="toggleMobileMenu()"><i class="fas fa-map-marker-alt"></i> <span data-zh="服务区域" data-en="Coverage">服务区域</span></a>
+    <a href="#contact" onclick="toggleMobileMenu()"><i class="fas fa-phone"></i> <span data-zh="联系我们" data-en="Contact">联系我们</span></a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="images/A_stunning_wide_banner_image_f_2026-09-04T03-26-47.png" alt="Hero Background">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="floating-leaves">
+      <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+      <div class="leaf"></div><div class="leaf"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span data-zh="国家高新技术企业 · 成立于2014年" data-en="National High-Tech Enterprise · Est. 2014">国家高新技术企业 · 成立于2014年</span>
+      </div>
+      <h1 class="hero-title">
+        <span data-zh="技术治污" data-en="Technology-Driven">技术治污</span>
+        <span class="highlight" data-zh="绿色创新" data-en="Green Innovation">绿色创新</span><br>
+        <span data-zh="守护碧水蓝天" data-en="Protecting Our Blue Skies">守护碧水蓝天</span>
+      </h1>
+      <p class="hero-desc" data-zh="佛山市叶绿体环保科技有限公司，聚焦环境保护事业，为工业企业提供全过程、全方位的环保合规与技术服务。" data-en="Foshan Chloroplast Environmental Protection Technology Co., Ltd. — providing full-process environmental compliance and technical services for industrial enterprises.">
+        佛山市叶绿体环保科技有限公司，聚焦环境保护事业，为工业企业提供全过程、全方位的环保合规与技术服务。
+      </p>
+      <div class="hero-buttons">
+        <a href="#services" class="btn btn-primary">
+          <i class="fas fa-rocket"></i>
+          <span data-zh="了解服务" data-en="Our Services">了解服务</span>
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <i class="fas fa-phone"></i>
+          <span data-zh="联系我们" data-en="Contact Us">联系我们</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number" data-count="3000">0</div>
+        <div class="stat-label" data-zh="累计服务客户" data-en="Enterprise Clients">累计服务客户</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-count="95" data-suffix="%+">0</div>
+        <div class="stat-label" data-zh="环评一次通过率" data-en="EIA First-Pass Rate">环评一次通过率</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-count="34">0</div>
+        <div class="stat-label" data-zh="项实用新型专利" data-en="Utility Model Patents">项实用新型专利</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-count="60" data-suffix="%">0</div>
+        <div class="stat-label" data-zh="中级及以上职称" data-en="Mid-Level+ Titles">中级及以上职称</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about-section" id="about">
+    <div class="section-container">
+      <div class="about-grid">
+        <div class="about-image reveal">
+          <img src="images/Aerial_view_of_a_modern_green__2026-09-04T03-27-11.png" alt="About">
+          <div class="about-badge">
+            <div class="badge-year">2014</div>
+            <div class="badge-text" data-zh="年成立" data-en="Established">年成立</div>
+          </div>
+        </div>
+        <div class="about-content reveal">
+          <div class="section-tag" data-zh="关于我们" data-en="About Us">关于我们</div>
+          <h3 data-zh="现代化高新环保科技企业" data-en="Modern High-Tech Environmental Enterprise">现代化高新环保科技企业</h3>
+          <p data-zh="佛山市叶绿体环保科技有限公司总部位于广东省佛山市禅城区绿岛湖都市产业区，是一家聚焦环境保护事业的现代化高新科技企业。" data-en="Headquartered in Lüdao Lake Industrial Zone, Chancheng District, Foshan, Guangdong, we are a modern high-tech enterprise dedicated to environmental protection.">
+            佛山市叶绿体环保科技有限公司总部位于广东省佛山市禅城区绿岛湖都市产业区，是一家聚焦环境保护事业的现代化高新科技企业。
+          </p>
+          <p data-zh="公司形成了以环保技术咨询为引领、工程设计与设备研发协同发展的综合服务体系，核心业务涵盖环境影响评价、排污许可管理、环保管家服务、应急预案、清洁生产审核、环保工程设计、环保设施运营、环保设备研发制造、环境监测及土壤污染调查等领域。" data-en="We have built an integrated service system led by environmental technical consulting and supported by engineering design and equipment R&D, covering EIA, pollution permits, environmental stewardship, emergency plans, cleaner production audits, engineering design, facility operation, equipment manufacturing, monitoring, and soil surveys.">
+            公司形成了以环保技术咨询为引领、工程设计与设备研发协同发展的综合服务体系，核心业务涵盖环境影响评价、排污许可管理、环保管家服务、应急预案、清洁生产审核、环保工程设计、环保设施运营、环保设备研发制造、环境监测及土壤污染调查等领域。
+          </p>
+          <div class="about-mission">
+            <strong data-zh="核心使命" data-en="Our Mission">核心使命</strong>
+            <span data-zh="技术治污、绿色创新 —— 致力于为工业企业的绿色转型与合规运营提供全过程技术支撑。" data-en="Technology-driven pollution control and green innovation — providing full-process technical support for the green transformation and compliance of industrial enterprises.">
+              技术治污、绿色创新 —— 致力于为工业企业的绿色转型与合规运营提供全过程技术支撑。
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services-section" id="services">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-tag" data-zh="核心业务" data-en="Core Services">核心业务</div>
+        <h2 class="section-title" data-zh="全方位环保服务体系" data-en="Comprehensive Environmental Services">全方位环保服务体系</h2>
+        <p class="section-subtitle" data-zh="以环保技术咨询为引领，工程设计与设备研发协同发展" data-en="Led by environmental technical consulting, supported by engineering design and equipment R&D">以环保技术咨询为引领，工程设计与设备研发协同发展</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/Professional_illustration_of_e_2026-09-04T03-26-37.png" alt="Consulting">
+            <div class="service-icon"><i class="fas fa-file-alt"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="环境影响评价与咨询" data-en="EIA & Consulting">环境影响评价与咨询</h3>
+            <p data-zh="专业编制环境影响评价报告，提供全方位评估咨询服务，一次通过率达95%以上。" data-en="Professional EIA reporting and comprehensive assessment consulting with a first-pass approval rate above 95%.">专业编制环境影响评价报告，提供全方位评估咨询服务，一次通过率达95%以上。</p>
+            <div class="service-tags">
+              <span class="service-tag" data-zh="环评报告" data-en="EIA Reports">环评报告</span>
+              <span class="service-tag" data-zh="评估咨询" data-en="Assessment">评估咨询</span>
+            </div>
+          </div>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/Modern_environmental_engineeri_2026-09-04T03-26-38.png" alt="Engineering">
+            <div class="service-icon"><i class="fas fa-tools"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="环保工程与设备研发" data-en="Engineering & Equipment">环保工程与设备研发</h3>
+            <p data-zh="环保工程设计、专业承包及设施运营，研发制造蓄热式催化燃烧(RCO)等先进环保设备。" data-en="Environmental engineering design, contracting, facility operation, and R&D of advanced equipment such as RCO catalytic combustion units.">环保工程设计、专业承包及设施运营，研发制造蓄热式催化燃烧(RCO)等先进环保设备。</p>
+            <div class="service-tags">
+              <span class="service-tag">RCO设备</span>
+              <span class="service-tag" data-zh="工程设计" data-en="Engineering">工程设计</span>
+              <span class="service-tag" data-zh="设施运营" data-en="Operation">设施运营</span>
+            </div>
+          </div>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/Environmental_monitoring_and_s_2026-09-04T03-26-39.png" alt="Monitoring">
+            <div class="service-icon"><i class="fas fa-microscope"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="环境监测与土壤调查" data-en="Monitoring & Soil Survey">环境监测与土壤调查</h3>
+            <p data-zh="环境质量监测、土壤污染状况调查与隐患排查，为企业提供科学精准的环境数据支撑。" data-en="Environmental quality monitoring, soil contamination surveys and risk inspections, providing scientific and accurate environmental data support.">环境质量监测、土壤污染状况调查与隐患排查，为企业提供科学精准的环境数据支撑。</p>
+            <div class="service-tags">
+              <span class="service-tag" data-zh="环境监测" data-en="Monitoring">环境监测</span>
+              <span class="service-tag" data-zh="土壤调查" data-en="Soil Survey">土壤调查</span>
+            </div>
+          </div>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/Elegant_abstract_nature_backgr_2026-09-04T03-27-11.png" alt="Steward">
+            <div class="service-icon"><i class="fas fa-user-shield"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="环保管家与合规服务" data-en="Environmental Steward">环保管家与合规服务</h3>
+            <p data-zh="常年环保顾问与一站式合规服务，包括排污许可证申领及证后常态化管理、清洁生产审核等。" data-en="Long-term environmental advisory and one-stop compliance services, including pollutant discharge permits and post-permit management, cleaner production audits.">常年环保顾问与一站式合规服务，包括排污许可证申领及证后常态化管理、清洁生产审核等。</p>
+            <div class="service-tags">
+              <span class="service-tag" data-zh="环保管家" data-en="Steward">环保管家</span>
+              <span class="service-tag" data-zh="排污许可" data-en="Permits">排污许可</span>
+            </div>
+          </div>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/A_stunning_wide_banner_image_f_2026-09-04T03-26-47.png" alt="Emergency">
+            <div class="service-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="应急预案与风险评估" data-en="Emergency & Risk Plans">应急预案与风险评估</h3>
+            <p data-zh="突发环境事件应急预案编制，帮助企业建立健全环境风险防控体系，提升应急处置能力。" data-en="Emergency environmental incident contingency planning, helping enterprises establish sound environmental risk prevention and emergency response systems.">突发环境事件应急预案编制，帮助企业建立健全环境风险防控体系，提升应急处置能力。</p>
+            <div class="service-tags">
+              <span class="service-tag" data-zh="应急预案" data-en="Contingency">应急预案</span>
+              <span class="service-tag" data-zh="风险评估" data-en="Risk Assessment">风险评估</span>
+            </div>
+          </div>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-image">
+            <img src="images/Aerial_view_of_a_modern_green__2026-09-04T03-27-11.png" alt="Integrated">
+            <div class="service-icon"><i class="fas fa-network-wired"></i></div>
+          </div>
+          <div class="service-body">
+            <h3 data-zh="一站式综合服务" data-en="One-Stop Service">一站式综合服务</h3>
+            <p data-zh="覆盖15个重点行业，提供从咨询、设计、施工到运营维护的全链条环保解决方案。" data-en="Covering 15 key industries, providing full-chain environmental solutions from consulting, design, construction to operation and maintenance.">覆盖15个重点行业，提供从咨询、设计、施工到运营维护的全链条环保解决方案。</p>
+            <div class="service-tags">
+              <span class="service-tag" data-zh="全链条" data-en="Full Chain">全链条</span>
+              <span class="service-tag" data-zh="15个行业" data-en="15 Industries">15个行业</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qualifications -->
+  <section class="qual-section" id="qualifications">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-tag" style="background:rgba(255,255,255,0.15);color:#a7f3d0;border-color:rgba(255,255,255,0.2);" data-zh="资质荣誉" data-en="Qualifications">资质荣誉</div>
+        <h2 class="section-title" data-zh="权威资质，专业保障" data-en="Authoritative Qualifications">权威资质，专业保障</h2>
+        <p class="section-subtitle" data-zh="多项国家级与省级资质认证，为服务质量保驾护航" data-en="Multiple national and provincial certifications ensuring service quality">多项国家级与省级资质认证，为服务质量保驾护航</p>
+      </div>
+      <div class="qual-grid">
+        <div class="qual-card reveal">
+          <div class="qual-icon"><i class="fas fa-certificate"></i></div>
+          <h3 data-zh="国家高新技术企业" data-en="National High-Tech Enterprise">国家高新技术企业</h3>
+          <p data-zh="2020年获评认定，具备领先的技术创新能力" data-en="Awarded in 2020, with leading technological innovation capabilities">2020年获评认定，具备领先的技术创新能力</p>
+        </div>
+        <div class="qual-card reveal">
+          <div class="qual-icon"><i class="fas fa-clipboard-check"></i></div>
+          <h3 data-zh="广东省环保咨询乙级" data-en="GD EP Consulting Grade B">广东省环保咨询乙级</h3>
+          <p data-zh="广东省环保技术咨询服务能力评价证书（乙级）" data-en="Guangdong Provincial Environmental Consulting Service Capability Certificate (Grade B)">广东省环保技术咨询服务能力评价证书（乙级）</p>
+        </div>
+        <div class="qual-card reveal">
+          <div class="qual-icon"><i class="fas fa-globe"></i></div>
+          <h3 data-zh="ISO三体系认证" data-en="ISO Triple Certification">ISO三体系认证</h3>
+          <p data-zh="ISO 9001 / ISO 14001 / ISO 45001 管理体系认证" data-en="ISO 9001 / ISO 14001 / ISO 45001 management system certifications">ISO 9001 / ISO 14001 / ISO 45001 管理体系认证</p>
+        </div>
+        <div class="qual-card reveal">
+          <div class="qual-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3 data-zh="34项实用新型专利" data-en="34 Utility Model Patents">34项实用新型专利</h3>
+          <p data-zh="持续技术创新，拥有多项自主知识产权" data-en="Continuous technological innovation with multiple independent intellectual property rights">持续技术创新，拥有多项自主知识产权</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners -->
+  <section class="partners-section" id="partners">
+    <div class="section-container">
+      <div class="section-header reveal">
+        <div class="section-tag" data-zh="产学研合作" data-en="Collaboration">产学研合作</div>
+        <h2 class="section-title" data-zh="携手顶尖高校，共筑绿色未来" data-en="Partnering with Top Universities">携手顶尖高校，共筑绿色未来</h2>
+        <p class="section-subtitle" data-zh="与多所知名高校及行业机构建立深度战略合作" data-en="Deep strategic partnerships with renowned universities and industry institutions">与多所知名高校及行业机构建立深度战略合作</p>
+      </div>
+      <div class="partners-grid">
+        <div class="partner-card reveal">
+          <div class="partner-icon"><i class="fas fa-university"></i></div>
+          <h3 data-zh="中山大学" data-en="Sun Yat-sen University">中山大学</h3>
+          <p data-zh="环境科学与工程学院深度合作" data-en="School of Environmental Science & Engineering">环境科学与工程学院深度合作</p>
+        </div>
+        <div class="partner-card reveal">
+          <div class="partner-icon"><i class="fas fa-university"></i></div>
+          <h3 data-zh="华南理工大学" data-en="South China University of Technology">华南理工大学</h3>
+          <p data-zh="环境与能源学院联合研究" data-en="School of Environment and Energy joint research">环境与能源学院联合研究</p>
+        </div>
+        <div class="partner-card reveal">
+          <div class="partner-icon"><i class="fas fa-university"></i></div>
+          <h3 data-zh="广东工业大学" data-en="Guangdong University of Technology">广东工业大学</h3>
+          <p data-zh="产学研协同创新合作" data-en="Industry-academia-research collaboration">产学研协同创新合作</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coverage -->
+  <section class="coverage-section" id="coverage">
+    <div class="coverage-bg">
+      <img src="images/Elegant_abstract_nature_backgr_2026-09-04T03-27-11.png" alt="">
+    </div>
+    <div class="section-container coverage-content">
+      <div class="section-header reveal">
+        <div class="section-tag" data-zh="服务区域" data-en="Service Coverage">服务区域</div>
+        <h2 class="section-title" data-zh="粤港澳大湾区全覆盖" data-en="Covering the Greater Bay Area">粤港澳大湾区全覆盖</h2>
+        <p class="section-subtitle" data-zh="服务网络覆盖大湾区7城，为工业企业绿色转型提供本地化技术支撑" data-en="Service network covering 7 GBA cities, providing localized technical support for green transformation">服务网络覆盖大湾区7城，为工业企业绿色转型提供本地化技术支撑</p>
+      </div>
+      <div class="coverage-cities">
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="佛山" data-en="Foshan">佛山</div>
+          <div class="en">Foshan</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="广州" data-en="Guangzhou">广州</div>
+          <div class="en">Guangzhou</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="肇庆" data-en="Zhaoqing">肇庆</div>
+          <div class="en">Zhaoqing</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="云浮" data-en="Yunfu">云浮</div>
+          <div class="en">Yunfu</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="江门" data-en="Jiangmen">江门</div>
+          <div class="en">Jiangmen</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="惠州" data-en="Huizhou">惠州</div>
+          <div class="en">Huizhou</div>
+        </div>
+        <div class="city-card reveal">
+          <i class="fas fa-city"></i>
+          <div class="cn" data-zh="东莞" data-en="Dongguan">东莞</div>
+          <div class="en">Dongguan</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Footer -->
+  <section class="contact-section" id="contact">
+    <div class="section-container">
+      <div class="contact-grid">
+        <div class="contact-brand reveal">
+          <img src="images/logo.jpg" alt="Logo">
+          <h3 data-zh="佛山市叶绿体环保科技有限公司" data-en="Foshan Chloroplast Environmental Protection Technology Co., Ltd.">佛山市叶绿体环保科技有限公司</h3>
+          <p data-zh="技术治污、绿色创新。我们致力于为工业企业提供全过程、全方位的环保合规与技术服务，守护碧水蓝天，共建绿色未来。" data-en="Technology-driven pollution control and green innovation. We are committed to providing full-process environmental compliance and technical services for industrial enterprises.">
+            技术治污、绿色创新。我们致力于为工业企业提供全过程、全方位的环保合规与技术服务，守护碧水蓝天，共建绿色未来。
+          </p>
+        </div>
+        <div class="contact-col reveal">
+          <h4 data-zh="快速导航" data-en="Quick Links">快速导航</h4>
+          <ul>
+            <li><a href="#about"><i class="fas fa-chevron-right"></i> <span data-zh="关于我们" data-en="About">关于我们</span></a></li>
+            <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-zh="核心业务" data-en="Services">核心业务</span></a></li>
+            <li><a href="#qualifications"><i class="fas fa-chevron-right"></i> <span data-zh="资质荣誉" data-en="Qualifications">资质荣誉</span></a></li>
+            <li><a href="#partners"><i class="fas fa-chevron-right"></i> <span data-zh="产学研合作" data-en="Partners">产学研合作</span></a></li>
+          </ul>
+        </div>
+        <div class="contact-col reveal">
+          <h4 data-zh="服务项目" data-en="Services">服务项目</h4>
+          <ul>
+            <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-zh="环境影响评价" data-en="EIA">环境影响评价</span></a></li>
+            <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-zh="环保工程设备" data-en="Engineering">环保工程设备</span></a></li>
+            <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-zh="环境监测调查" data-en="Monitoring">环境监测调查</span></a></li>
+            <li><a href="#services"><i class="fas fa-chevron-right"></i> <span data-zh="环保管家服务" data-en="Steward">环保管家服务</span></a></li>
+          </ul>
+        </div>
+        <div class="contact-col reveal">
+          <h4 data-zh="联系我们" data-en="Contact Us">联系我们</h4>
+          <ul>
+            <li><a href="tel:13432617172"><i class="fas fa-phone"></i> 13432617172</a></li>
+            <li><a href="#"><i class="fas fa-map-marker-alt"></i> <span data-zh="佛山市禅城区绿岛湖都市产业区" data-en="Lüdao Lake Industrial Zone, Chancheng, Foshan">佛山市禅城区绿岛湖都市产业区</span></a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> <span data-zh="商务咨询" data-en="Business Inquiry">商务咨询</span></a></li>
+            <li><a href="#"><i class="fas fa-clock"></i> <span data-zh="周一至周五 9:00-18:00" data-en="Mon-Fri 9:00-18:00">周一至周五 9:00-18:00</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p data-zh="&copy; 2025 佛山市叶绿体环保科技有限公司 版权所有" data-en="&copy; 2025 Foshan Chloroplast Environmental Protection Technology Co., Ltd. All Rights Reserved.">&copy; 2025 佛山市叶绿体环保科技有限公司 版权所有</p>
+        <p data-zh="技术治污 · 绿色创新" data-en="Technology-Driven · Green Innovation">技术治污 · 绿色创新</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Language data
+    const currentLang = { value: 'zh' };
+
+    function setLang(lang) {
+      currentLang.value = lang;
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+      document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+
+      document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = text;
+          } else {
+            el.textContent = text;
+          }
+        }
+      });
+
+      // Update nav logo text
+      const logoText = document.querySelector('.nav-logo-text span');
+      if (logoText) {
+        logoText.textContent = logoText.getAttribute('data-' + lang);
+      }
+    }
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('mobileToggle').classList.toggle('open');
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Active nav link
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+      });
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    });
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Counter animation
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.getAttribute('data-count'));
+          const suffix = el.getAttribute('data-suffix') || '';
+          let current = 0;
+          const increment = target / 60;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
+            }
+            el.textContent = Math.floor(current) + suffix;
+          }, 25);
+          countObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-number').forEach(el => countObserver.observe(el));
+
+    // Loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 1200);
+    });
+  </script>
 </body>
 </html>
